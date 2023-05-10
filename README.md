@@ -9,9 +9,9 @@
 
 ## Objective
 
-1. Design the tutorial environment.
-2. Implement Indie Pixel Framework.
-3. Implement the base for Rigidboy.
-4. Implement the base input controls.
+1. ~~Design the tutorial environment.~~
+2. ~~Implement Indie Pixel Framework.~~
+3. ~~Implement the base for Rigidboy.~~
+4. ~~Implement the base input controls.~~
 5. Implementation for Clamping the Inputs.
 6. Implement the collective input on the Helicopter.
