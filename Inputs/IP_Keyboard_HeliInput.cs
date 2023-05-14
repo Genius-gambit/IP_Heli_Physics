@@ -8,16 +8,21 @@ namespace IndiePixel
     {
         #region Variables
         [Header("Heli Keyboard Inputs")]
-        private float throttleInput = 0.0f;
-        private float collectiveInput = 0.0f;
-        private Vector2 cyclicInput = Vector2.zero;
-        private float pedalInput = 0.0f;
+        protected float throttleInput = 0.0f;
+        protected float collectiveInput = 0.0f;
+        protected float stickyThrottle = 0.0f;
+        protected Vector2 cyclicInput = Vector2.zero;
+        protected float pedalInput = 0.0f;
         #endregion
 
         #region Properties
-        public float    ThrottleInput
+        public float    RawThrottleInput
         {
             get { return throttleInput;  }
+        }
+        public float StickyThrottle
+        {
+            get { return stickyThrottle; }
         }
         public float CollectiveInput
         {
@@ -41,29 +46,49 @@ namespace IndiePixel
         {
             base.HandleInputs();
 
+            // Input Methods
             HandleThrottle();
             HandlePedal();
             HandleCyclic();
             HandleCollective();
+
+            // Utility Methods
+            ClampInputs();
+            HandleStickyThrottle();
         }
 
-        void    HandleThrottle()
+        protected virtual void    HandleThrottle()
         {
             throttleInput = throttle;
         }
-        void    HandlePedal()
+        protected virtual void HandlePedal()
         {
             pedalInput = pedal;
         }
-        void HandleCollective()
+        protected virtual void HandleCollective()
         {
             collectiveInput = collective;
         }
 
-        void    HandleCyclic()
+        protected virtual void HandleCyclic()
         {
             cyclicInput.y = vertical;
             cyclicInput.x = horizontal;
+        }
+
+        protected void  ClampInputs()
+        {
+            throttleInput = Mathf.Clamp(throttleInput, -1.0f, 1.0f);
+            collectiveInput = Mathf.Clamp(collectiveInput, -1.0f, 1.0f);
+            cyclicInput = Vector2.ClampMagnitude(cyclicInput, 1);
+            pedalInput = Mathf.Clamp(pedalInput, -1.0f, 1.0f);
+        }
+
+        protected void  HandleStickyThrottle()
+        {
+            stickyThrottle += RawThrottleInput * Time.deltaTime;
+            stickyThrottle = Mathf.Clamp01(stickyThrottle);
+            print("Sticky Throttle: " + stickyThrottle);
         }
         #endregion
     }
